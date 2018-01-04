@@ -53,4 +53,5 @@ def maven_publish group, artifact, version, classifier, file
     `#{cmd.join(" ")}`
 end
 
-require_relative 'ctre'
+require_relative 'ctre' unless ARGV.include?("--no-ctre")
+require_relative 'navx' unless ARGV.include?("--no-navx")
