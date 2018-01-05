@@ -5,6 +5,8 @@ This is the repository that puts third-party vendor libraries for FRC into a mav
 This repo currently services the following vendor libraries:
 - CrossTheRoadElectronics
     - CTRE Phoenix Framework (since v5.0.4.0)
+- KauaiLabs
+    - NavX driver software (since v3.0.342)
 
 # Usage
 Clone the repository and run the following (assumes ruby and rubygems are installed):   
