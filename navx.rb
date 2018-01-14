@@ -3,17 +3,17 @@ require 'zip'
 require 'digest'
 require 'pathname'
 
-URL = "https://www.kauailabs.com/public_files/navx-mxp/navx-mxp-libs.zip"
+NAVX_URL = "https://www.kauailabs.com/public_files/navx-mxp/navx-mxp-libs.zip"
 
-GROUP = "openrio.mirror.third.kauailabs"
-ARTIFACT_JAVA = "navx-java"
-ARTIFACT_NATIVE = "navx-cpp"
+NAVX_GROUP = "openrio.mirror.third.kauailabs"
+NAVX_ARTIFACT_JAVA = "navx-java"
+NAVX_ARTIFACT_NATIVE = "navx-cpp"
 
 puts "Fetching NavX Libs..."
 tmpfile = "#{LOCALTMP}/navx.zip"
 
 puts "-> Downloading..." 
-open(URL, "rb") do |rf_zip|
+open(NAVX_URL, "rb") do |rf_zip|
     open(tmpfile, "wb") do |tmp|
         tmp.write(rf_zip.read)
     end
@@ -85,8 +85,8 @@ unless File.exists?(publishfile)
     puts "-> Publishing..."
     puts "\t->> Headers"
     maven_publish(
-        GROUP,
-        ARTIFACT_NATIVE,
+        NAVX_GROUP,
+        NAVX_ARTIFACT_NATIVE,
         File.read("#{tmpfolder}/VERSION"),
         "headers",
         "#{tmpfolder}/headers/NavX-headers.zip"
@@ -94,8 +94,8 @@ unless File.exists?(publishfile)
 
     puts "\t->> C++"
     maven_publish(
-        GROUP,
-        ARTIFACT_NATIVE,
+        NAVX_GROUP,
+        NAVX_ARTIFACT_NATIVE,
         File.read("#{tmpfolder}/VERSION"),
         nil,
         "#{tmpfolder}/cpp/NavX-cpp.zip"
@@ -103,16 +103,16 @@ unless File.exists?(publishfile)
 
     puts "\t->> Java"
     maven_publish(
-        GROUP,
-        ARTIFACT_JAVA,
+        NAVX_GROUP,
+        NAVX_ARTIFACT_JAVA,
         File.read("#{tmpfolder}/VERSION"),
         nil,
         "#{tmpfolder}/java/navx_frc.jar"
     )
 
     maven_publish(
-        GROUP,
-        ARTIFACT_JAVA,
+        NAVX_GROUP,
+        NAVX_ARTIFACT_JAVA,
         File.read("#{tmpfolder}/VERSION"),
         "sources",
         "#{tmpfolder}/java/NavX-java-sources.jar"

@@ -3,27 +3,27 @@ require 'zip'
 require 'digest'
 require 'pathname'
 
-URL = "http://www.ctr-electronics.com/downloads/lib/"
-LIBREGEX = /href=\"(CTRE_Phoenix_FRCLibs_NON-WINDOWS(_[a-zA-Z0-9\.]+)?\.zip)\"/
+CTRE_URL = "http://www.ctr-electronics.com/downloads/lib/"
+CTRE_LIBREGEX = /href=\"(CTRE_Phoenix_FRCLibs_NON-WINDOWS(_[a-zA-Z0-9\.]+)?\.zip)\"/
 
-GROUP = "openrio.mirror.third.ctre"
-ARTIFACT_JAVA = "CTRE-phoenix-java"
-ARTIFACT_NATIVE = "CTRE-phoenix-cpp"
+CTRE_GROUP = "openrio.mirror.third.ctre"
+CTRE_ARTIFACT_JAVA = "CTRE-phoenix-java"
+CTRE_ARTIFACT_NATIVE = "CTRE-phoenix-cpp"
 
 puts "Fetching CTRE Phoenix Libs..."
 
-open(URL, "rb") do |readfile|
+open(CTRE_URL, "rb") do |readfile|
     licenseroot = "#{LICENSES}/CTRE/Phoenix"
     FileUtils.mkdir_p licenseroot
     
     libs = readfile
                 .read
-                .scan(LIBREGEX)
+                .scan(CTRE_LIBREGEX)
                 .reject { |x| x.last.nil? }
                 .map(&:first)
 
     libs.each do |lib|
-        liburl = "#{URL}#{lib}"
+        liburl = "#{CTRE_URL}#{lib}"
         libhash = Digest::MD5.hexdigest(liburl)
         tmpfile = "#{LOCALTMP}/#{libhash}.zip"
         tmpfolder = "#{LOCALTMP}/#{libhash}"
@@ -63,7 +63,8 @@ open(URL, "rb") do |readfile|
                     licensefolder = "#{licenseroot}/#{vers}"
                     FileUtils.mkdir_p licensefolder
                     zip.select { |x| x.name.include? "Software License" }.each do |license|
-                        license.extract("#{licensefolder}/#{File.basename(license.name)}")
+                        lfile = "#{licensefolder}/#{File.basename(license.name)}"
+                        license.extract(lfile) unless File.exists?(lfile)
                     end
 
                     puts "\t->> Headers"
@@ -105,8 +106,8 @@ open(URL, "rb") do |readfile|
 
             puts "\t->> Headers"
             maven_publish(
-                GROUP,
-                ARTIFACT_NATIVE,
+                CTRE_GROUP,
+                CTRE_ARTIFACT_NATIVE,
                 File.read("#{tmpfolder}/VERSION"),
                 "headers",
                 "#{tmpfolder}/headers/CTRE_Phoenix-headers.zip"
@@ -114,8 +115,8 @@ open(URL, "rb") do |readfile|
 
             puts "\t->> C++"
             maven_publish(
-                GROUP,
-                ARTIFACT_NATIVE,
+                CTRE_GROUP,
+                CTRE_ARTIFACT_NATIVE,
                 File.read("#{tmpfolder}/VERSION"),
                 nil,
                 "#{tmpfolder}/cpp/CTRE_Phoenix-cpp.zip"
@@ -124,8 +125,8 @@ open(URL, "rb") do |readfile|
             puts "\t->> Java"
             deployJava = Proc.new do |classifier, file|
                 maven_publish(
-                    GROUP,
-                    ARTIFACT_JAVA,
+                    CTRE_GROUP,
+                    CTRE_ARTIFACT_JAVA,
                     File.read("#{tmpfolder}/VERSION"),
                     classifier,
                     "#{tmpfolder}/java/#{file}"
