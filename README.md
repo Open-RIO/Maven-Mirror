@@ -5,6 +5,7 @@ This is the repository that puts third-party vendor libraries for FRC into a mav
 This repo currently services the following vendor libraries:
 - CrossTheRoadElectronics
     - CTRE Phoenix Framework (since v5.0.4.0)
+    - CTRE Toolsuite Framework (including v4_Legacy, see [here](https://www.chiefdelphi.com/forums/showthread.php?threadid=161407))
 - KauaiLabs
     - NavX driver software (since v3.0.342)
 
